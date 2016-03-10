@@ -280,7 +280,7 @@ void printangles(){
       Serial.print(acimut_actual);
       Serial.print(',');
       Serial.print(cenit_actual);
-      Serial.print(',');
+      
       
     
       s2   = ','+String(manual)+','+String(manual_giraEste)+','+String(manual_giraOeste)+','+String(manual_giraNorte)+','+String(manual_giraSur);
