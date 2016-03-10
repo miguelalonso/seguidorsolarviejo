@@ -267,17 +267,29 @@ void printangles(){
           Serial.println(error);
             }
 
-      //datos para el raspberry pi
+       //datos para el raspberry pi
+      Serial.println("INI:");
       String s2=String(year())+','+String(month())+','+String(day());
-      s2 += ','+String(hour())+','+String(minute())+','+String(second());
-      s2 += ','+String(sun.dAzimuth-180)+','+String(sun.dZenithAngle);
-      s2 += ','+String(acimut_actual)+','+String(cenit_actual);
-      s2 += ','+String(manual)+','+String(manual_giraEste)+','+String(manual_giraOeste)+','+String(manual_giraNorte)+','+String(manual_giraSur);
+      s2 += ','+String(hour())+','+String(minute())+','+String(second())+',';
+      Serial.print(s2);
+      Serial.print(sun.dAzimuth-180);
+      Serial.print(',');
+      Serial.print(sun.dZenithAngle);
+      Serial.print(',');
+      Serial.print(acimut_actual);
+      Serial.print(',');
+      Serial.print(cenit_actual);
+      Serial.print(',');
+
+
+      s2   = ','+String(manual)+','+String(manual_giraEste)+','+String(manual_giraOeste)+','+String(manual_giraNorte)+','+String(manual$
       s2 +=','+String(FC_este)+','+String(FC_oeste)+','+String(FC_norte)+','+String(FC_sur);
       s2 +=','+String(error)+','+String(iniciado);
       s2 +=','+String(iniciado_Este)+','+String(iniciado_Norte);
-      s2 +=','+String(estado_giroE)+','+String(estado_giroO)+','+String(estado_giroN)+','+String(estado_giroS);
+      s2 +=','+String(estado_giroE)+','+String(estado_giroO)+','+String(estado_giroN)+','+String(estado_giroS)+',';
       Serial.println(s2);
+      Serial.println(",FIN");
+
       
 
 }
