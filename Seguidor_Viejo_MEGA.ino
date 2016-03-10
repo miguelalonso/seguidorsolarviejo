@@ -266,8 +266,9 @@ void printangles(){
           Serial.print(" Error : ");
           Serial.println(error);
             }
+            Serial.print("Iniciado:");Serial.print(iniciado);
 
-       //datos para el raspberry pi
+      //datos para el raspberry pi
       Serial.println("INI:");
       String s2=String(year())+','+String(month())+','+String(day());
       s2 += ','+String(hour())+','+String(minute())+','+String(second())+',';
@@ -280,17 +281,16 @@ void printangles(){
       Serial.print(',');
       Serial.print(cenit_actual);
       Serial.print(',');
-
-
-      s2   = ','+String(manual)+','+String(manual_giraEste)+','+String(manual_giraOeste)+','+String(manual_giraNorte)+','+String(manual$
+      
+    
+      s2   = ','+String(manual)+','+String(manual_giraEste)+','+String(manual_giraOeste)+','+String(manual_giraNorte)+','+String(manual_giraSur);
       s2 +=','+String(FC_este)+','+String(FC_oeste)+','+String(FC_norte)+','+String(FC_sur);
       s2 +=','+String(error)+','+String(iniciado);
       s2 +=','+String(iniciado_Este)+','+String(iniciado_Norte);
       s2 +=','+String(estado_giroE)+','+String(estado_giroO)+','+String(estado_giroN)+','+String(estado_giroS)+',';
       Serial.println(s2);
       Serial.println(",FIN");
-
-      
+            
 
 }
   
@@ -338,16 +338,7 @@ void finales_carrera(){
       FC_oeste =  digitalRead(FC_oeste_pin);
       FC_norte =  digitalRead(FC_norte_pin);
       FC_sur =    digitalRead(FC_sur_pin);
-/*
-      Serial.print("Final carrera Este: ");
-      Serial.println(FC_este);
-      Serial.print("Final carrera OEste: ");
-      Serial.println(FC_este);
-      Serial.print("Final carrera Norte: ");
-      Serial.println(FC_norte);
-      Serial.print("Final carrera Sur: ");
-      Serial.println(FC_sur);
-  */    
+
       error_FC_acimut=false;
       error_FC_cenit=false;
       error_FC=false;
@@ -752,7 +743,7 @@ void display_manual(){
   lcd.setCursor(0,1);
   lcd.print(F("Manual:"));
   if (estado_giroE){ lcd.print(F("Este"));}
-  if (estado_giroO){ lcd.print(F("OEste"));}
+  if (estado_giroO){ lcd.print(F("Oeste"));}
   if (estado_giroN){ lcd.print(F("Norte"));}
   if (estado_giroS){ lcd.print(F("Sur"));}
   }
