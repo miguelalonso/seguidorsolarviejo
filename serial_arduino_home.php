@@ -17,7 +17,12 @@
       <![endif]-->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<style>
+    .custom{
+        width: 125px !important;
+    }
 
+</style>
 </head>
 
 <?php
@@ -27,7 +32,7 @@
  * Time: 16:24
  */
 
-
+date_default_timezone_set('Europe/Madrid');
 
 $startdate = (substr($ollog, -12, 4)) . "," . (substr($ollog, -8, 2)) . "-1," . (substr($ollog, -6, 2));
 $stopdate  = (substr($lstlog, -12, 4)) . "," . (substr($lstlog, -8, 2)) . "-1," . (substr($lstlog, -6, 2));
@@ -50,7 +55,8 @@ $day = date("d");
 
 $month = date("m");
 $monthname = date("M");
-$date=date("Y-M-d");
+$date=date("d-M-Y  h:i:s");
+
 //echo $date;
 //<button type = 'button' class = 'btn btn-primary'> <a href='index_multi.php'></a>Button 7</button>
 echo "
@@ -62,10 +68,27 @@ echo "
 </table>
 
 Local:<div id='horalocal' class = 'label label-info'>hora</div>
-Rpi server:<div id='horapi' class = 'label label-info'>hora</div> 
+Rpi server:<div id='horapi' class = 'label label-info'>hora</div>
+Arduino control:<div id='horaard' class = 'label label-info'>hora</div>
 Actualizado cada 30s
 </div>";
 ?>
+<br>
+<div class='container'>
+    <p>
+        <a href='serial_arduino_write.php?comando=A' class='btn btn-info custom' role='button'>Automático</a>
+        <a href='serial_arduino_write.php?comando=M' class='btn btn-info custom' role='button'>Manual</a>
+        <a href='serial_arduino_write.php?comando=E' class='btn btn-info custom' role='button'>Giro Este</a>
+        <a href='serial_arduino_write.php?comando=O' class='btn btn-info custom' role='button'>Giro Oeste</a>
+    </p>
+    <p>
+        <a href='serial_arduino_setTime.php' class='btn btn-primary custom' role='button'>Sincronizar Hora</a>
+        <button type='button' class='btn btn-success custom'></button>
+        <a href='serial_arduino_write.php?comando=N' class='btn btn-info custom' role='button'>Giro Norte</a>
+        <a href='serial_arduino_write.php?comando=S' class='btn btn-info custom' role='button'>Giro Sur</a>
+    </p>
+</div>
+
 <div class="container">
 <table class='table' data-height="19" >
     <thead>
@@ -204,63 +227,44 @@ function tabla(){
                  document.getElementById('Giro_norte').innerHTML = json.estado_giroN;
                  document.getElementById('Giro_sur').innerHTML = json.estado_giroS;
 
- 		 document.getElementById('Manual_este').innerHTML = json.manual_giraEste;
+         		 document.getElementById('Manual_este').innerHTML = json.manual_giraEste;
                  document.getElementById('Manual_oeste').innerHTML = json.manual_giraOeste;
                  document.getElementById('Manual_norte').innerHTML = json.manual_giraNorte;
                  document.getElementById('Manual_sur').innerHTML = json.manual_giraSur;
 
-		 document.getElementById('error').innerHTML = json.error;
-                 document.getElementById('iniciado_Este').innerHTML = json.inciado_Este;
+		         document.getElementById('error').innerHTML = json.error;
+		         document.getElementById('iniciado').innerHTML = json.iniciado;
+                 document.getElementById('iniciado_Este').innerHTML = json.iniciado_Este;
                  document.getElementById('iniciado_Norte').innerHTML = json.iniciado_Norte;
                  document.getElementById('manual').innerHTML = json.manual;
 
 
+    var date = [ json.dia,json.mes,  json.ano ];
+    var time = [ json.hora, json.min, json.seg];
+    for ( var k = 1; k < 3; k++ ) {
+        if ( time[k] < 10 ) {
+            time[k] = \"0\" + time[k];
+        }
+    }
+   var varfecha=date.join(\"/\") + \" \" + time.join(\":\");
+    document.getElementById('horaard').innerHTML= varfecha;
+
 
         });
 
-
-
 }
-
-
-  $(document).ready(function() {
-
-  tabla();
-  timeStamp();
-
-  setInterval(tabla, 30000);
-  setInterval(timeStamp, 30000);
-  });
-
 </script>";
-
-
-
-
-
-
-
-
-echo "
-<div class='container'>
-<p>
-<a href='#' class='btn btn-info custom' role='button'>Automático</a>
-<a href='#' class='btn btn-info custom' role='button'>Manual</a>
-<a href='#' class='btn btn-info custom' role='button'>Giro Este</a>
-<a href='#' class='btn btn-info custom' role='button'>Giro Oeste</a>
-</p>
-<p>
-<a href='#' class='btn btn-primary custom' role='button'>Sincronizar Hora</a>
-<a href='#' class='btn btn-info custom' role='button'></a>
-<a href='#' class='btn btn-info custom' role='button'>Giro Norte</a>
-<a  class='btn btn-info custom' role='button'>Giro Sur</a>
-</p>
-</div>
-";
 ?>
 
 
 <script type='text/javascript'>
+    $(document).ready(function() {
+        tabla();
+        timeStamp();
+        setInterval(tabla, 30000);
+        setInterval(timeStamp, 30000);
+    });
+
 function timeStamp() {
     var now = new Date();
     var date = [ now.getDate(),now.getMonth() + 1,  now.getFullYear() ];
@@ -271,7 +275,7 @@ function timeStamp() {
         }
     }
    var varfecha=date.join("/") + " " + time.join(":");
-    document.getElementById('horalocal').innerHTML= 'Fecha Actual: '+varfecha;
+    document.getElementById('horalocal').innerHTML= varfecha;
     return date.join("/") + " " + time.join(":");
 }
 </script>

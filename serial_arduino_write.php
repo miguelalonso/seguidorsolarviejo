@@ -88,4 +88,5 @@ $v=write($comando);
     //echo json_encode($data);
 
 echo json_encode($v);
+header("Location:serial_arduino_home.php")
 ?>

@@ -66,6 +66,11 @@ int FC_norte_pin= 30;
 int FC_sur_pin=   32; 
 int manual_cenit_boton_pin =50;
 int manual_acimut_boton_pin=52; //control manual mediante botonera activado
+boolean manual_cenit_boton =50;
+boolean manual_acimut_boton=52; //control manual mediante botonera activado
+boolean manual_boton;
+boolean manual_boton_anterior;
+
 
 boolean FC_este;
 boolean FC_oeste;
@@ -173,6 +178,8 @@ void setup()  {
 ///////////////////////////////////////////////////////////LOOP////////////////////////////////////////////////
 void loop(){ 
   finales_carrera();
+     
+  
   
   if (Serial.available()) {
        procesaSerie();
@@ -287,7 +294,8 @@ void printangles(){
       s2 +=','+String(FC_este)+','+String(FC_oeste)+','+String(FC_norte)+','+String(FC_sur);
       s2 +=','+String(error)+','+String(iniciado);
       s2 +=','+String(iniciado_Este)+','+String(iniciado_Norte);
-      s2 +=','+String(estado_giroE)+','+String(estado_giroO)+','+String(estado_giroN)+','+String(estado_giroS)+',';
+      s2 +=','+String(estado_giroE)+','+String(estado_giroO)+','+String(estado_giroN)+','+String(estado_giroS);
+      s2 +=','+String(manual_acimut_boton)+','+String(manual_cenit_boton)+',';
       Serial.println(s2);
       Serial.println(",FIN");
             
@@ -338,6 +346,8 @@ void finales_carrera(){
       FC_oeste =  digitalRead(FC_oeste_pin);
       FC_norte =  digitalRead(FC_norte_pin);
       FC_sur =    digitalRead(FC_sur_pin);
+      manual_cenit_boton=digitalRead(manual_cenit_boton_pin);
+      manual_acimut_boton=digitalRead(manual_acimut_boton_pin);
 
       error_FC_acimut=false;
       error_FC_cenit=false;
@@ -559,6 +569,7 @@ void procesaSerie(){
           Serial.println( F("___________> MANUAL CONTROL EAST turn <_______________________" ));
           manual=true;
           manual_giraEste=true;
+          manual_giraOeste=false;
           delay(2000);
         }
         if (buf == 'o' || buf == 'O'){
@@ -566,6 +577,7 @@ void procesaSerie(){
          buf = Serial.read();
           Serial.println( F("___________> MANUAL CONTROL WEST turn <_______________________" ));
           manual=true;
+          manual_giraEste=false;
           manual_giraOeste=true;
           delay(2000);
         }
@@ -575,12 +587,15 @@ void procesaSerie(){
           Serial.println( F("___________> MANUAL CONTROL NORTH turn <_______________________" ));
           manual=true;
           manual_giraNorte=true;
+          manual_giraSur=false;
           delay(2000);
         }
         if (buf == 's' || buf == 'S'){
       while(Serial.available())
          buf = Serial.read();
           Serial.println( F("___________> MANUAL CONTROL SOUTH turn <_______________________" ));
+          manual=true;
+          manual_giraNorte=false;
           manual_giraSur=true;
           delay(2000);
         }
